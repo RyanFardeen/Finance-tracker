@@ -218,8 +218,8 @@ export default function MonthlyReportsPage() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize ${
-                                transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
-                                transaction.type === 'expense' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' :
+                                transaction.type === 'INCOME' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
+                                transaction.type === 'EXPENSE' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' :
                                 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                               }`}>
                                 {transaction.type}
@@ -232,11 +232,11 @@ export default function MonthlyReportsPage() {
                               {transaction.notes || '-'}
                             </td>
                             <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-right ${
-                              transaction.type === 'income' ? 'text-green-600 dark:text-green-400' :
-                              transaction.type === 'expense' ? 'text-red-600 dark:text-red-400' :
+                              transaction.type === 'INCOME' ? 'text-green-600 dark:text-green-400' :
+                              transaction.type === 'EXPENSE' ? 'text-red-600 dark:text-red-400' :
                               'text-purple-600 dark:text-purple-400'
                             }`}>
-                              {transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : ''}
+                              {transaction.type === 'INCOME' ? '+' : transaction.type === 'EXPENSE' ? '-' : ''}
                               {formatCurrency(transaction.amount)}
                             </td>
                           </tr>

@@ -39,19 +39,19 @@ export default function AnalyticsPage() {
     setMonthlyData(monthly);
 
     // Category breakdowns
-    const expenses = calculations.getCategoryBreakdown(data, 'expense');
+    const expenses = calculations.getCategoryBreakdown(data, 'EXPENSE');
     setExpenseBreakdown(expenses.map(item => ({
       name: item.category.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
       value: item.amount,
     })));
 
-    const income = calculations.getCategoryBreakdown(data, 'income');
+    const income = calculations.getCategoryBreakdown(data, 'INCOME');
     setIncomeBreakdown(income.map(item => ({
       name: item.category.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
       value: item.amount,
     })));
 
-    const investments = calculations.getCategoryBreakdown(data, 'investment');
+    const investments = calculations.getCategoryBreakdown(data, 'INVESTMENT');
     setInvestmentBreakdown(investments.map(item => ({
       name: item.category.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
       value: item.amount,

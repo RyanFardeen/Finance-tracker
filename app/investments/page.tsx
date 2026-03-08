@@ -6,7 +6,7 @@ import SidebarWrapper from '@/components/SidebarWrapper';
 import { apiClient } from '@/lib/api-client';
 import { Transaction, InvestmentCategory } from '@/lib/types';
 import { formatCurrency, formatCategory, formatDate, validateAmount, sanitizeAmount } from '@/lib/formatters';
-import { Plus, Trash2, Edit2, Loader2 } from 'lucide-react';
+import { TrendingUp, Trash2, Edit2, Loader2 } from 'lucide-react';
 
 const investmentCategories: InvestmentCategory[] = [
   'stocks', 'mutual_funds', 'gold', 'real_estate', 'fixed_deposits', 'crypto', 'other'
@@ -55,7 +55,6 @@ export default function InvestmentsPage() {
     setError(null);
     
     try {
-      // Validate amount
       const amount = parseFloat(formData.amount);
       const validationError = validateAmount(amount);
       if (validationError) {
@@ -64,7 +63,6 @@ export default function InvestmentsPage() {
         return;
       }
 
-      // Sanitize amount (round to 2 decimals, enforce max)
       const sanitizedAmount = sanitizeAmount(amount);
       if (sanitizedAmount === null) {
         setError('Invalid amount');
@@ -139,12 +137,15 @@ export default function InvestmentsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
         <SidebarWrapper />
-        <main className="flex-1 ml-64 p-8 flex items-center justify-center">
+        <main className="flex-1 lg:ml-72 pt-16 lg:pt-0 p-8 flex items-center justify-center">
           <div className="text-center">
-            <Loader2 className="w-12 h-12 animate-spin text-primary-600 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Loading investment data...</p>
+            <div className="relative">
+              <div className="absolute inset-0 blur-xl bg-purple-500/20 rounded-full animate-pulse" />
+              <Loader2 className="relative w-16 h-16 animate-spin text-purple-600 mx-auto mb-4" />
+            </div>
+            <p className="text-lg font-medium text-gray-600 dark:text-gray-400 animate-pulse">Loading investment data...</p>
           </div>
         </main>
       </div>
@@ -152,64 +153,72 @@ export default function InvestmentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <SidebarWrapper />
       
-      <main className="flex-1 ml-64 p-8">
+      <main className="flex-1 lg:ml-72 pt-16 lg:pt-0 p-4 sm:p-6 lg:p-8 animate-in fade-in duration-500">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 animate-in slide-in-from-top duration-500">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 via-purple-700 to-purple-600 dark:from-purple-400 dark:via-purple-500 dark:to-purple-400 bg-clip-text text-transparent mb-2">
                 Investment Tracker
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
                 Track all your investments
               </p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95 touch-manipulation"
             >
-              <Plus size={20} />
+              <TrendingUp size={20} />
               Add Investment
             </button>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg mb-6">
-              {error}
+            <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-2 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-6 py-4 rounded-xl mb-6 shadow-md animate-in slide-in-from-top duration-300">
+              <p className="font-medium">{error}</p>
             </div>
           )}
 
           {/* Total Investments Card */}
-          <div className="bg-gradient-to-r from-purple-500 to-purple-700 rounded-xl p-8 shadow-lg mb-8">
-            <h2 className="text-white text-lg font-medium mb-2">Total Investments</h2>
-            <p className="text-white text-4xl font-bold truncate" title={formatAmount(totalInvestments, false)}>
-              {formatAmount(totalInvestments, true)}
-            </p>
-            <p className="text-purple-100 text-sm mt-2">
-              {transactions.length} investment entries
-            </p>
+          <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 rounded-2xl p-8 shadow-2xl mb-8 hover:shadow-3xl transition-all duration-300 hover:scale-[1.01] animate-in slide-in-from-bottom duration-500 delay-100">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            <div className="relative">
+              <h2 className="text-white text-lg font-semibold mb-3 flex items-center gap-2">
+                <TrendingUp className="w-6 h-6" />
+                Total Investments
+              </h2>
+              <p className="text-white text-4xl sm:text-5xl font-bold truncate mb-2" title={formatAmount(totalInvestments, false)}>
+                {formatAmount(totalInvestments, true)}
+              </p>
+              <p className="text-purple-100 text-sm font-medium">
+                📈 {transactions.length} investment {transactions.length === 1 ? 'entry' : 'entries'}
+              </p>
+            </div>
           </div>
 
           {/* Add/Edit Form */}
           {showForm && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 mb-8 animate-in slide-in-from-top duration-300">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full" />
                 {editingId ? 'Edit Investment' : 'Add New Investment'}
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Category
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value as InvestmentCategory })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all touch-manipulation"
                       required
                       disabled={submitting}
                     >
@@ -221,14 +230,14 @@ export default function InvestmentsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Amount (₹)
                     </label>
                     <input
                       type="number"
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all touch-manipulation"
                       placeholder="0"
                       min="0"
                       max="999999999999"
@@ -236,55 +245,55 @@ export default function InvestmentsPage() {
                       required
                       disabled={submitting}
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-medium">
                       Maximum: ₹999,999,999,999
                     </p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Date
                     </label>
                     <input
                       type="date"
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all touch-manipulation"
                       required
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Notes
                     </label>
                     <input
                       type="text"
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all touch-manipulation"
                       placeholder="Optional notes"
                       maxLength={500}
                       disabled={submitting}
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-medium">
                       {formData.notes.length}/500 characters
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="flex-1 sm:flex-none px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-95 touch-manipulation"
                   >
-                    {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {submitting && <Loader2 className="w-5 h-5 animate-spin" />}
                     {editingId ? 'Update' : 'Add'} Investment
                   </button>
                   <button
                     type="button"
                     onClick={resetForm}
                     disabled={submitting}
-                    className="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                    className="flex-1 sm:flex-none px-8 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 active:scale-95 touch-manipulation"
                   >
                     Cancel
                   </button>
@@ -294,28 +303,36 @@ export default function InvestmentsPage() {
           )}
 
           {/* Transactions List */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-in slide-in-from-bottom duration-500 delay-200">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-700">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full" />
                 Investment History
               </h3>
             </div>
             {transactions.length === 0 ? (
-              <div className="p-8 text-center">
-                <p className="text-gray-500 dark:text-gray-400">
+              <div className="p-12 text-center">
+                <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp size={32} className="text-purple-600 dark:text-purple-400" />
+                </div>
+                <p className="text-base text-gray-500 dark:text-gray-400 font-medium">
                   No investment entries yet. Click "Add Investment" to get started!
                 </p>
               </div>
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                {transactions.map((transaction) => (
-                  <div key={transaction.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium">
+                {transactions.map((transaction, index) => (
+                  <div 
+                    key={transaction.id} 
+                    className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent dark:hover:from-purple-900/10 dark:hover:to-transparent transition-all duration-200 group"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <span className="px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold shadow-sm">
                           {formatCategory(transaction.category)}
                         </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                           {formatDate(transaction.date, 'medium')}
                         </span>
                       </div>
@@ -325,21 +342,21 @@ export default function InvestmentsPage() {
                         </p>
                       )}
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-xl font-bold text-purple-600 dark:text-purple-400 truncate" title={formatAmount(transaction.amount, false)}>
+                    <div className="flex items-center justify-between sm:justify-end gap-4">
+                      <span className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 truncate" title={formatAmount(transaction.amount, false)}>
                         {formatAmount(transaction.amount, true)}
                       </span>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(transaction)}
-                          className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                          className="p-2.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 touch-manipulation"
                           title="Edit"
                         >
                           <Edit2 size={18} />
                         </button>
                         <button
                           onClick={() => handleDelete(transaction.id)}
-                          className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          className="p-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 touch-manipulation"
                           title="Delete"
                         >
                           <Trash2 size={18} />

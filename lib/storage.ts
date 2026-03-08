@@ -51,23 +51,23 @@ export const storage = {
   },
 
   // Get transactions by type
-  getTransactionsByType(type: 'income' | 'expense' | 'investment'): Transaction[] {
+  getTransactionsByType(type: 'INCOME' | 'EXPENSE' | 'INVESTMENT'): Transaction[] {
     return this.getTransactions().filter(t => t.type === type);
   },
 
   // Get income transactions
   getIncomeTransactions(): IncomeTransaction[] {
-    return this.getTransactionsByType('income') as IncomeTransaction[];
+    return this.getTransactionsByType('INCOME') as IncomeTransaction[];
   },
 
   // Get expense transactions
   getExpenseTransactions(): ExpenseTransaction[] {
-    return this.getTransactionsByType('expense') as ExpenseTransaction[];
+    return this.getTransactionsByType('EXPENSE') as ExpenseTransaction[];
   },
 
   // Get investment transactions
   getInvestmentTransactions(): InvestmentTransaction[] {
-    return this.getTransactionsByType('investment') as InvestmentTransaction[];
+    return this.getTransactionsByType('INVESTMENT') as InvestmentTransaction[];
   },
 
   // Clear all data

@@ -27,7 +27,7 @@ export async function GET(
       );
     }
 
-    const transaction = await prisma.transaction.findUnique({
+    const transaction = await prisma.transaction.findFirst({
       where: {
         id: params.id,
         userId: session.user.id,
@@ -41,7 +41,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(transaction);
+    // Convert Decimal to number for JSON serialization
+    const serializedTransaction = {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
+
+    return NextResponse.json(serializedTransaction);
   } catch (error) {
     console.error('Error fetching transaction:', error);
     return NextResponse.json(
@@ -75,15 +81,35 @@ export async function PATCH(
       updateData.date = new Date(updateData.date);
     }
 
-    const transaction = await prisma.transaction.update({
+    // First verify the transaction belongs to the user
+    const existing = await prisma.transaction.findFirst({
       where: {
         id: params.id,
         userId: session.user.id,
       },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Transaction not found' },
+        { status: 404 }
+      );
+    }
+
+    const transaction = await prisma.transaction.update({
+      where: {
+        id: params.id,
+      },
       data: updateData,
     });
 
-    return NextResponse.json(transaction);
+    // Convert Decimal to number for JSON serialization
+    const serializedTransaction = {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
+
+    return NextResponse.json(serializedTransaction);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -115,10 +141,24 @@ export async function DELETE(
       );
     }
 
-    await prisma.transaction.delete({
+    // First verify the transaction belongs to the user
+    const existing = await prisma.transaction.findFirst({
       where: {
         id: params.id,
         userId: session.user.id,
+      },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Transaction not found' },
+        { status: 404 }
+      );
+    }
+
+    await prisma.transaction.delete({
+      where: {
+        id: params.id,
       },
     });
 

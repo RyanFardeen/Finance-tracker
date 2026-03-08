@@ -3,32 +3,32 @@ import { startOfMonth, endOfMonth, startOfYear, endOfYear, format, parseISO } fr
 
 export const calculations = {
   // Calculate total by type
-  calculateTotal(transactions: Transaction[], type: 'income' | 'expense' | 'investment'): number {
+  calculateTotal(transactions: Transaction[], type: 'INCOME' | 'EXPENSE' | 'INVESTMENT'): number {
     return transactions
-      .filter(t => t.type.toLowerCase() === type.toLowerCase())
+      .filter(t => t.type === type)
       .reduce((sum, t) => sum + t.amount, 0);
   },
 
   // Calculate total for a date range
   calculateTotalForRange(
     transactions: Transaction[],
-    type: 'income' | 'expense' | 'investment',
+    type: 'INCOME' | 'EXPENSE' | 'INVESTMENT',
     startDate: Date,
     endDate: Date
   ): number {
     return transactions
       .filter(t => {
         const transactionDate = parseISO(t.date);
-        return t.type.toLowerCase() === type.toLowerCase() && transactionDate >= startDate && transactionDate <= endDate;
+        return t.type === type && transactionDate >= startDate && transactionDate <= endDate;
       })
       .reduce((sum, t) => sum + t.amount, 0);
   },
 
   // Get financial summary
   getFinancialSummary(transactions: Transaction[]): FinancialSummary {
-    const totalIncome = this.calculateTotal(transactions, 'income');
-    const totalExpenses = this.calculateTotal(transactions, 'expense');
-    const totalInvestments = this.calculateTotal(transactions, 'investment');
+    const totalIncome = this.calculateTotal(transactions, 'INCOME');
+    const totalExpenses = this.calculateTotal(transactions, 'EXPENSE');
+    const totalInvestments = this.calculateTotal(transactions, 'INVESTMENT');
     const totalSavings = totalIncome - totalExpenses;
     const netWorth = totalSavings + totalInvestments;
 
@@ -46,9 +46,9 @@ export const calculations = {
     const start = startOfMonth(date);
     const end = endOfMonth(date);
 
-    const income = this.calculateTotalForRange(transactions, 'income', start, end);
-    const expenses = this.calculateTotalForRange(transactions, 'expense', start, end);
-    const investments = this.calculateTotalForRange(transactions, 'investment', start, end);
+    const income = this.calculateTotalForRange(transactions, 'INCOME', start, end);
+    const expenses = this.calculateTotalForRange(transactions, 'EXPENSE', start, end);
+    const investments = this.calculateTotalForRange(transactions, 'INVESTMENT', start, end);
     const savings = income - expenses;
     const netWorth = savings + investments;
 
@@ -66,9 +66,9 @@ export const calculations = {
     const start = startOfYear(new Date(year, 0, 1));
     const end = endOfYear(new Date(year, 11, 31));
 
-    const income = this.calculateTotalForRange(transactions, 'income', start, end);
-    const expenses = this.calculateTotalForRange(transactions, 'expense', start, end);
-    const investments = this.calculateTotalForRange(transactions, 'investment', start, end);
+    const income = this.calculateTotalForRange(transactions, 'INCOME', start, end);
+    const expenses = this.calculateTotalForRange(transactions, 'EXPENSE', start, end);
+    const investments = this.calculateTotalForRange(transactions, 'INVESTMENT', start, end);
     const savings = income - expenses;
     const netWorth = savings + investments;
 
@@ -112,7 +112,7 @@ export const calculations = {
   // Get category breakdown
   getCategoryBreakdown(
     transactions: Transaction[],
-    type: 'income' | 'expense' | 'investment'
+    type: 'INCOME' | 'EXPENSE' | 'INVESTMENT'
   ): CategoryBreakdown[] {
     const filtered = transactions.filter(t => t.type === type);
     const total = filtered.reduce((sum, t) => sum + t.amount, 0);

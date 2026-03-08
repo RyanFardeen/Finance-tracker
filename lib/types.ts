@@ -1,4 +1,5 @@
-export type TransactionType = 'income' | 'expense' | 'investment';
+// Database uses uppercase, but we'll normalize to uppercase throughout
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'INVESTMENT';
 
 export type IncomeCategory = 'salary' | 'business' | 'passive' | 'other';
 
@@ -33,17 +34,17 @@ export interface Transaction {
 }
 
 export interface IncomeTransaction extends Transaction {
-  type: 'income';
+  type: 'INCOME';
   category: IncomeCategory;
 }
 
 export interface ExpenseTransaction extends Transaction {
-  type: 'expense';
+  type: 'EXPENSE';
   category: ExpenseCategory;
 }
 
 export interface InvestmentTransaction extends Transaction {
-  type: 'investment';
+  type: 'INVESTMENT';
   category: InvestmentCategory;
 }
 

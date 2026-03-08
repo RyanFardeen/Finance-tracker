@@ -10,7 +10,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'income' | 'expense' | 'investment'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'INCOME' | 'EXPENSE' | 'INVESTMENT'>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -99,15 +99,15 @@ export default function TransactionsPage() {
   };
 
   const totalIncome = filteredTransactions
-    .filter(t => t.type === 'income')
+    .filter(t => t.type === 'INCOME')
     .reduce((sum, t) => sum + t.amount, 0);
 
   const totalExpenses = filteredTransactions
-    .filter(t => t.type === 'expense')
+    .filter(t => t.type === 'EXPENSE')
     .reduce((sum, t) => sum + t.amount, 0);
 
   const totalInvestments = filteredTransactions
-    .filter(t => t.type === 'investment')
+    .filter(t => t.type === 'INVESTMENT')
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
@@ -201,9 +201,9 @@ export default function TransactionsPage() {
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="all">All Types</option>
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                  <option value="investment">Investment</option>
+                  <option value="INCOME">Income</option>
+                  <option value="EXPENSE">Expense</option>
+                  <option value="INVESTMENT">Investment</option>
                 </select>
               </div>
 
@@ -273,28 +273,28 @@ export default function TransactionsPage() {
                   <div key={transaction.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <div className="flex items-center gap-4">
                       <div className={`p-2 rounded-lg ${
-                        transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900/30' :
-                        transaction.type === 'expense' ? 'bg-red-100 dark:bg-red-900/30' :
+                        transaction.type === 'INCOME' ? 'bg-green-100 dark:bg-green-900/30' :
+                        transaction.type === 'EXPENSE' ? 'bg-red-100 dark:bg-red-900/30' :
                         'bg-purple-100 dark:bg-purple-900/30'
                       }`}>
-                        {transaction.type === 'income' ? <TrendingUp size={20} className="text-green-600 dark:text-green-400" /> :
-                         transaction.type === 'expense' ? <TrendingDown size={20} className="text-red-600 dark:text-red-400" /> :
+                        {transaction.type === 'INCOME' ? <TrendingUp size={20} className="text-green-600 dark:text-green-400" /> :
+                         transaction.type === 'EXPENSE' ? <TrendingDown size={20} className="text-red-600 dark:text-red-400" /> :
                          <Wallet size={20} className="text-purple-600 dark:text-purple-400" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-3 mb-1">
                           <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${
-                            transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
-                            transaction.type === 'expense' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' :
+                            transaction.type === 'INCOME' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
+                            transaction.type === 'EXPENSE' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' :
                             'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                           }`}>
                             {transaction.category.replace('_', ' ')}
                           </span>
                           <span className="text-sm text-gray-500 dark:text-gray-400">
-                            {new Date(transaction.date).toLocaleDateString('en-IN', { 
-                              day: 'numeric', 
-                              month: 'short', 
-                              year: 'numeric' 
+                            {new Date(transaction.date).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
                             })}
                           </span>
                         </div>
@@ -306,11 +306,11 @@ export default function TransactionsPage() {
                       </div>
                     </div>
                     <div className={`text-xl font-semibold ${
-                      transaction.type === 'income' ? 'text-green-600 dark:text-green-400' :
-                      transaction.type === 'expense' ? 'text-red-600 dark:text-red-400' :
+                      transaction.type === 'INCOME' ? 'text-green-600 dark:text-green-400' :
+                      transaction.type === 'EXPENSE' ? 'text-red-600 dark:text-red-400' :
                       'text-purple-600 dark:text-purple-400'
                     }`}>
-                      {transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : ''}{formatCurrency(transaction.amount)}
+                      {transaction.type === 'INCOME' ? '+' : transaction.type === 'EXPENSE' ? '-' : ''}{formatCurrency(transaction.amount)}
                     </div>
                   </div>
                 ))}

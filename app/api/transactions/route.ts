@@ -48,7 +48,13 @@ export async function GET(request: NextRequest) {
       orderBy: { date: 'desc' },
     });
 
-    return NextResponse.json(transactions);
+    // Convert Decimal to number for JSON serialization
+    const serializedTransactions = transactions.map(t => ({
+      ...t,
+      amount: Number(t.amount),
+    }));
+
+    return NextResponse.json(serializedTransactions);
   } catch (error) {
     console.error('Error fetching transactions:', error);
     return NextResponse.json(
@@ -70,6 +76,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verify user exists in database
+    const userExists = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!userExists) {
+      console.error('User not found in database:', session.user.id);
+      return NextResponse.json(
+        { error: 'User not found. Please sign out and sign in again.' },
+        { status: 404 }
+      );
+    }
+
     const body = await request.json();
 
     // Validate transaction data
@@ -83,7 +102,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(transaction, { status: 201 });
+    // Convert Decimal to number for JSON serialization
+    const serializedTransaction = {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
+
+    return NextResponse.json(serializedTransaction, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
