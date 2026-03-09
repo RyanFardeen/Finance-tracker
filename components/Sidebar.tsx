@@ -18,12 +18,14 @@ import {
   Menu,
   X,
   LogOut,
-  User
+  User,
+  Sparkles
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
+  { icon: Sparkles, label: 'AI Entry', href: '/ai-entry', highlight: true },
   { icon: TrendingUp, label: 'Income', href: '/income' },
   { icon: TrendingDown, label: 'Expenses', href: '/expenses' },
   { icon: PiggyBank, label: 'Investments', href: '/investments' },
@@ -152,6 +154,7 @@ export default function Sidebar() {
             {menuItems.map((item, index) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
+              const isHighlight = item.highlight;
               
               return (
                 <li key={item.href} style={{ animationDelay: `${index * 50}ms` }} className="animate-in slide-in-from-left duration-300">
@@ -161,13 +164,28 @@ export default function Sidebar() {
                     className={`
                       group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 touch-manipulation
                       ${isActive
-                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30 scale-[1.02]'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 dark:hover:from-gray-800 dark:hover:to-gray-700 hover:shadow-md active:scale-95'
+                        ? isHighlight
+                          ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 scale-[1.02]'
+                          : 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30 scale-[1.02]'
+                        : isHighlight
+                          ? 'text-gray-700 dark:text-gray-300 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 hover:shadow-md active:scale-95'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 dark:hover:from-gray-800 dark:hover:to-gray-700 hover:shadow-md active:scale-95'
                       }
                     `}
                   >
-                    <Icon size={20} className={`${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'} transition-colors`} />
+                    <Icon size={20} className={`${
+                      isActive
+                        ? 'text-white'
+                        : isHighlight
+                          ? 'text-purple-600 dark:text-purple-400'
+                          : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'
+                    } transition-colors`} />
                     <span className="font-medium text-sm">{item.label}</span>
+                    {isHighlight && !isActive && (
+                      <span className="ml-auto px-2 py-0.5 text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+                        NEW
+                      </span>
+                    )}
                     {isActive && (
                       <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                     )}
